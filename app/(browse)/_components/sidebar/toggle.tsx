@@ -23,7 +23,7 @@ export default function Toggle() {
       )}
       {!collapsed && (
         <div className="p-3 pl-6 mb-2 flex items-center w-full">
-          <p className="font-semibold text-primary">추천 컨텐츠</p>
+          <p className="font-semibold text-primary">탐색</p>
           <Hint label={label} side="right" asChild>
             <Button
               onClick={onCollapse}
