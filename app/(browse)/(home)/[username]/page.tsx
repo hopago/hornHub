@@ -5,7 +5,7 @@ import { Actions } from "./_components/actions";
 interface UserPageProps {
   params: {
     username: string;
-  }
+  };
 }
 
 export default async function UserPage({ params }: UserPageProps) {
@@ -19,7 +19,7 @@ export default async function UserPage({ params }: UserPageProps) {
 
   return (
     <main>
-      <Actions />
+      <Actions userId={user.id} isFollowing={isFollowing} />
     </main>
   );
 }
