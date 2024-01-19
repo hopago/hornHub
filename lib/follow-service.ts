@@ -1,6 +1,25 @@
 import { db } from "./db";
 import { getCurrentUser } from "./auth-service";
 
+export const getFollowedUsers = async () => {
+  try {
+    const currUser = await getCurrentUser();
+
+    const followedUsers = db.follow.findMany({
+      where: {
+        followerId: currUser.id,
+      },
+      include: {
+        following: true,
+      },
+    });
+
+    return followedUsers;
+  } catch (err) {
+    return [];
+  }
+};
+
 export async function isFollowingUser(id: string) {
   try {
     const currUser = await getCurrentUser();
@@ -68,9 +87,9 @@ export async function unFollowUser(id: string) {
 
   const targetUser = await db.user.findUnique({
     where: {
-      id
-    }
-  })
+      id,
+    },
+  });
 
   if (!targetUser) throw new Error("User not found");
   if (currUser.id === targetUser.id) throw new Error("Invalid request");
@@ -78,8 +97,8 @@ export async function unFollowUser(id: string) {
   const existingFollow = await db.follow.findFirst({
     where: {
       followerId: currUser.id,
-      followingId: targetUser.id
-    }
+      followingId: targetUser.id,
+    },
   });
   if (!existingFollow) throw new Error("Not following");
 
