@@ -33,6 +33,15 @@ export const getRecommended = async () => {
               },
             },
           },
+          {
+            NOT: {
+              blocking: {
+                some: {
+                  blockedId: userId,
+                },
+              },
+            },
+          },
         ],
       },
       orderBy: [
@@ -50,8 +59,6 @@ export const getRecommended = async () => {
       ],
     });
   }
-
-  console.log(users);
 
   return users;
 };

@@ -1,6 +1,8 @@
 import { isFollowingUser } from "@/lib/follow-service";
 import { getUserByUsername } from "@/lib/user-service";
 import { Actions } from "./_components/actions";
+import { isBlockedUser } from "@/lib/block-service";
+import { notFound } from "next/navigation";
 
 interface UserPageProps {
   params: {
@@ -16,10 +18,19 @@ export default async function UserPage({ params }: UserPageProps) {
   if (!user) return;
 
   const isFollowing = await isFollowingUser(user.id);
+  const isBlocked = await isBlockedUser(user.id);
+
+  // if (isBlocked) {
+  //   notFound();
+  // }
 
   return (
     <main>
-      <Actions userId={user.id} isFollowing={isFollowing} />
+      <Actions
+        userId={user.id}
+        isFollowing={isFollowing}
+        isBlocked={isBlocked}
+      />
     </main>
   );
 }
