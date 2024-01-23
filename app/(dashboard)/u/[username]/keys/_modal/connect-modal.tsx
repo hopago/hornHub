@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,11 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle
-} from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import {
   Select,
@@ -22,9 +18,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
+
+import { IngressInput } from "livekit-server-sdk";
+
+import { ElementRef, useRef, useState, useTransition } from "react";
+import { createIngress } from "@/actions/ingress";
+
+const RTMP = String(IngressInput.RTMP_INPUT);
+const WHIP = String(IngressInput.WHIP_INPUT);
+
+type IngressType = typeof RTMP | typeof WHIP;
 
 export default function ConnectModal() {
-  
+  const closeRef = useRef<ElementRef<"button">>(null);
+  const [isPending, startTransition] = useTransition();
+  const [ingressType, setIngressType] = useState<IngressType>(RTMP);
+
+  const onSubmit = () => {
+    startTransition(() => {
+      createIngress(parseInt(ingressType))
+        .then(() => {
+          toast("스트리밍 생성 완료");
+          closeRef.current?.click();
+        })
+        .catch(() => toast.error("서버 에러입니다, 다시 시도해주세요"));
+    });
+  };
 
   return (
     <Dialog>
@@ -35,13 +55,17 @@ export default function ConnectModal() {
         <DialogHeader>
           <DialogTitle>스트리밍 서버 설정</DialogTitle>
         </DialogHeader>
-        <Select>
+        <Select
+          disabled={isPending}
+          value={ingressType}
+          onValueChange={(value) => setIngressType(value)}
+        >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="스트리밍 타입" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="RTMP">RTMP</SelectItem>
-            <SelectItem value="WHIP">WHIP</SelectItem>
+            <SelectItem value={RTMP}>RTMP</SelectItem>
+            <SelectItem value={WHIP}>WHIP</SelectItem>
           </SelectContent>
         </Select>
         <Alert>
@@ -52,12 +76,12 @@ export default function ConnectModal() {
           </AlertDescription>
         </Alert>
         <div className="flex justify-between">
-          <DialogClose>
+          <DialogClose ref={closeRef} asChild>
             <Button variant="ghost">취소</Button>
-            <Button onClick={() => {}} variant="primary">
-              생성
-            </Button>
           </DialogClose>
+          <Button onClick={onSubmit} disabled={isPending} variant="primary">
+            생성
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
