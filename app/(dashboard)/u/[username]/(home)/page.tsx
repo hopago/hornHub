@@ -15,11 +15,9 @@ export default async function Dashboard({ params }: CreatorPageProps) {
   if (!user || user?.id !== externalUser?.id || !user.stream)
     throw new Error("Unauthorized");
 
-  return <div className="h-full">
-    <StreamPlayer
-      user={user}
-      stream={user.stream}
-      isFollowing
-    />
-  </div>;
+  return (
+    <div className="h-full">
+      <StreamPlayer user={user} stream={user.stream} isFollowing />
+    </div>
+  );
 }
