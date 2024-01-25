@@ -32,18 +32,11 @@ export const onBlock = async (id: string) => {
 };
 
 export async function onUnblock(id: string) {
-  try {
-    const blockedUser = await unblockUser(id);
+  const currUser = await getCurrentUser();
 
-    // 클라이언트 컴포넌츠에서 사용할 경우 revalidate X
-    // if (blockedUser) {
-    //   revalidatePath(`/${blockedUser.blocked.username}`);
-    // }
+  const blockedUser = await unblockUser(id);
 
-    revalidatePath("/");
+  revalidatePath(`/u/${currUser.username}/community`);
 
-    return blockedUser;
-  } catch (err) {
-    throw new Error(`Internal ${err}`);
-  }
+  return blockedUser;
 }
