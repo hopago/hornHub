@@ -41,7 +41,7 @@ export const Actions = ({ isFollowing, userId, isBlocked }: ActionsProps) => {
     startTransition(() => {
       onBlock(userId)
         .then((data) =>
-          toast.success(`${data.blocked.username}님이 차단되었습니다`)
+          toast.success(`${data?.blocked.username}님이 차단되었습니다`)
         )
         .catch((err) => {
           console.log(err);
