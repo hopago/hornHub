@@ -66,7 +66,7 @@ export default function ChatForm({
           placeholder="메시지 전송"
           className={cn(
             "border-white/10",
-            isFollowersOnly && "rounded-t-none border-t-0"
+            (isFollowersOnly || isDelayed) && "rounded-t-none border-t-0"
           )}
           disabled={isDisabled}
         />
